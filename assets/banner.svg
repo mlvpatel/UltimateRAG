@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-label="RagChatBot, Multimodal RAG">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2a0a2e"/>
+      <stop offset="1" stop-color="#4a044e"/>
+    </linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e879f9"/>
+      <stop offset="1" stop-color="#5eead4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="360" rx="18" fill="url(#bg)"/>
+  <rect x="1.5" y="1.5" width="1197" height="357" rx="17" fill="none" stroke="#e879f9" stroke-opacity="0.25" stroke-width="3"/>
+
+  <!-- title block -->
+  <rect x="64" y="74" width="56" height="10" rx="5" fill="url(#ac)"/>
+  <text x="64" y="146" font-family="Helvetica, Arial, sans-serif" font-size="64" font-weight="700" fill="#f8fafc">RagChatBot</text>
+  <text x="64" y="196" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="600" fill="#e879f9">Multimodal RAG</text>
+  <text x="64" y="232" font-family="Helvetica, Arial, sans-serif" font-size="19" fill="#cbd5e1">text and images in one vector space</text>
+  <rect x="64" y="258" width="217.5" height="34" rx="17" fill="#f8fafc" fill-opacity="0.08" stroke="#e879f9" stroke-opacity="0.5"/>
+  <text x="172.75" y="281" font-family="ui-monospace, Menlo, monospace" font-size="17" fill="#5eead4" text-anchor="middle">rag-multimodal-2026</text>
+
+  <!-- year badge -->
+  <rect x="1066" y="34" width="70" height="32" rx="16" fill="#e879f9" fill-opacity="0.16" stroke="#e879f9" stroke-opacity="0.55"/>
+  <text x="1101" y="56" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#5eead4" text-anchor="middle">2026</text>
+
+  <!-- motif -->
+  
+  <g stroke-linecap="round">
+    <rect x="710" y="92" width="130" height="94" rx="10" fill="#f8fafc" fill-opacity="0.08" stroke="#e879f9" stroke-width="3"/>
+    <line x1="730" y1="120" x2="820" y2="120" stroke="#e879f9" stroke-width="5" opacity="0.85"/>
+    <line x1="730" y1="142" x2="820" y2="142" stroke="#e879f9" stroke-width="5" opacity="0.55"/>
+    <line x1="730" y1="164" x2="796" y2="164" stroke="#e879f9" stroke-width="5" opacity="0.3"/>
+    <rect x="710" y="200" width="130" height="94" rx="10" fill="#f8fafc" fill-opacity="0.08" stroke="#5eead4" stroke-width="3"/>
+    <circle cx="742" cy="228" r="10" fill="#5eead4"/>
+    <path d="M716 288 L762 244 L790 268 L812 250 L836 288 Z" fill="#5eead4" opacity="0.85"/>
+    <path d="M852 139 C 910 139 920 186 968 190" stroke="#e879f9" stroke-width="5" fill="none"/>
+    <path d="M852 247 C 910 247 920 200 968 196" stroke="#5eead4" stroke-width="5" fill="none"/>
+    <circle cx="1030" cy="150" r="7" fill="#e879f9"/>
+    <circle cx="1066" cy="188" r="7" fill="#5eead4"/>
+    <circle cx="1014" cy="212" r="7" fill="#e879f9" opacity="0.7"/>
+    <circle cx="1090" cy="140" r="7" fill="#5eead4" opacity="0.7"/>
+    <circle cx="1112" cy="216" r="7" fill="#e879f9" opacity="0.5"/>
+    <circle cx="1048" cy="242" r="7" fill="#5eead4" opacity="0.5"/>
+    <ellipse cx="1060" cy="192" rx="98" ry="76" fill="none" stroke="url(#ac)" stroke-width="3" stroke-dasharray="7 7"/>
+    <text x="1060" y="300" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#cbd5e1" text-anchor="middle">one vector space</text>
+  </g>
+
+  <!-- corner credit -->
+  <text x="1160" y="334" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="600" fill="#94a3b8" text-anchor="end">by <tspan fill="#5eead4">MlvPtL</tspan></text>
+</svg>

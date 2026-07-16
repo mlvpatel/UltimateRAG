@@ -6,9 +6,7 @@ Part of the RAG line, a series of reference enterprise RAG implementations, one 
 
 [![CI](https://github.com/mlvpatel/rag-multimodal-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/mlvpatel/rag-multimodal-2026/actions/workflows/ci.yml) ![Python](https://img.shields.io/badge/python-3.11-blue) ![Retrieval](https://img.shields.io/badge/retrieval-text%20plus%20images-blue) ![Postgres](https://img.shields.io/badge/Postgres-pgvector-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
-![rag-multimodal-2026 answering with the images it retrieved](assets/videos/rag-multimodal-2026-demo.gif)
-
-The clip above is a live, unedited run on local models. The question's answer lives in an image; the trace shows the mixed retrieval, and the image that grounded the answer appears under it. A full resolution screenshot is at [assets/screenshots/rag-multimodal-2026-ui.png](assets/screenshots/rag-multimodal-2026-ui.png). No paid keys were used.
+![RagChatBot banner](assets/banner.svg)
 
 ## Contents
 
