@@ -1,27 +1,17 @@
-"""Security utilities: API key auth, rate limiting, input sanitization."""
+"""Security utilities: rate limiting and input sanitization.
 
-from typing import Optional
+There is no API key auth on purpose. This is a reference service meant to run
+on one machine: docker-compose binds every published port to the loopback
+interface, so nothing is reachable from the network. A shipped default
+credential would read as protection while being public knowledge. Put a real
+gateway in front of the API before exposing it beyond localhost.
+"""
 
 import bleach
-from fastapi import Header, HTTPException, status
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
-from src.core.config import settings
-
 limiter = Limiter(key_func=get_remote_address)
-
-
-def verify_api_key(
-    x_api_key: Optional[str] = Header(default=None, alias="X-API-Key")
-) -> str:
-    """Require a matching X-API-Key header on protected endpoints."""
-    if x_api_key != settings.api_key:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing API key",
-        )
-    return x_api_key
 
 
 def sanitize_question(text: str) -> str:

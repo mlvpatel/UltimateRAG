@@ -25,11 +25,15 @@ def get_content_store():
 
         from src.embeddings.vectorstore_utils import (
             _sqlalchemy_url,
-            get_query_embeddings,
+            get_document_embeddings,
         )
 
+        # The store's own embedder runs at ADD time, so it is the document-task
+        # embedder; queries are embedded separately in search() with the
+        # query-task embedder. Asymmetric on purpose: a question and the passage
+        # answering it are not paraphrases.
         _store = PGVector(
-            embeddings=get_query_embeddings(),
+            embeddings=get_document_embeddings(),
             collection_name=CONTENT_COLLECTION,
             connection=_sqlalchemy_url(),
             use_jsonb=True,
@@ -76,7 +80,10 @@ def add_image(caption: str, file_id: int, filename: str, image_path: str) -> Non
 
 def search(query: str, k: int):
     """Return the top k content items, text or image, for a query."""
-    return get_content_store().similarity_search(query, k=k)
+    from src.embeddings.vectorstore_utils import get_query_embeddings
+
+    vector = get_query_embeddings().embed_query(query)
+    return get_content_store().similarity_search_by_vector(vector, k=k)
 
 
 def delete(file_id: int) -> bool:

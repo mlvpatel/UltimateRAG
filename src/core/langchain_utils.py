@@ -9,6 +9,8 @@ import logging
 from typing import Any, List
 
 from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from src.core.config import settings
 
@@ -55,3 +57,27 @@ def _to_lc_messages(chat_history) -> List[Any]:
         else:
             messages.append(HumanMessage(content=turn["content"]))
     return messages
+
+
+_CONTEXTUALIZE_SYSTEM = (
+    "Given a chat history and the latest user question which might reference "
+    "context in the chat history, formulate a standalone question which can be "
+    "understood without the chat history. Do NOT answer the question, just "
+    "reformulate it if needed and otherwise return it as is."
+)
+
+_contextualize_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", _CONTEXTUALIZE_SYSTEM),
+        MessagesPlaceholder("chat_history"),
+        ("human", "{input}"),
+    ]
+)
+
+
+def _reformulate_query(llm, user_input: str, history: List[Any]) -> str:
+    """Rewrite the question to be standalone, skipped when there is no history."""
+    if not history:
+        return user_input
+    chain = _contextualize_prompt | llm | StrOutputParser()
+    return chain.invoke({"input": user_input, "chat_history": history})

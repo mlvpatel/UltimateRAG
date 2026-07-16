@@ -1,4 +1,4 @@
-# rag-modular-2023 stack.
+# UltimateRAG stack.
 # Data services (postgres, redis) run standalone for local development and tests.
 # App services (api, worker, streamlit) build from the project Dockerfile.
 #
@@ -17,12 +17,12 @@ services:
       POSTGRES_PASSWORD: rag
       POSTGRES_DB: rag_multimodal
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - rag_multimodal-pgdata:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rag_naive -d rag_multimodal"]
+      test: ["CMD-SHELL", "pg_isready -U rag -d rag_multimodal"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -32,7 +32,7 @@ services:
     container_name: rag_multimodal-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -48,7 +48,7 @@ services:
     restart: unless-stopped
     command: uvicorn src.api.main:app --host 0.0.0.0 --port 8000
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     env_file:
       - path: ../.env
         required: false
@@ -90,7 +90,7 @@ services:
     restart: unless-stopped
     command: streamlit run frontend/streamlit_app.py --server.port 8501 --server.address 0.0.0.0
     ports:
-      - "8501:8501"
+      - "127.0.0.1:8501:8501"
     env_file:
       - path: ../.env
         required: false

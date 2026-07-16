@@ -2,9 +2,9 @@
 Database utilities for rag-multimodal-2026, conversation memory and document
 records on Postgres via psycopg 3.
 
-This module preserves the public interface of the rag-multimodal-2026 SQLite
-baseline (src/api/db_utils.py in the rag-multimodal-2026 repo) while swapping the
-storage engine to Postgres, the same instance used for pgvector.
+This module keeps the public interface of the SQLite memory layer used by
+the earlier rungs of the line (rag-naive-2022, rag-advanced-2023) while
+swapping the storage engine to Postgres, the same instance used for pgvector.
 
 Design notes:
 - The connection pool is created lazily, on first use, not at import
@@ -106,18 +106,21 @@ def insert_application_logs(
             )
 
 
-def get_chat_history(session_id: str) -> list:
-    """Return the full chat history for a session as alternating dicts.
+def get_chat_history(session_id: str, limit: int = 20) -> list:
+    """Return the LAST `limit` turns of a session as alternating dicts.
 
-    Rows are ordered by created_at ascending. Each row expands to two
-    entries in the returned list, human then ai, in that order.
+    The window exists because unbounded history grows the prompt with every
+    turn of a long session. Rows come back oldest first; each row expands to
+    two entries in the returned list, human then ai, in that order.
     """
     with _get_pool().connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "SELECT user_query, gpt_response FROM application_logs "
-                "WHERE session_id = %s ORDER BY created_at ASC",
-                (session_id,),
+                "SELECT user_query, gpt_response FROM ("
+                "  SELECT id, user_query, gpt_response FROM application_logs"
+                "  WHERE session_id = %s ORDER BY id DESC LIMIT %s"
+                ") recent ORDER BY id ASC",
+                (session_id, limit),
             )
             rows = cur.fetchall()
 

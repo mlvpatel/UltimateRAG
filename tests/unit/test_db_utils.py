@@ -51,7 +51,7 @@ def test_insert_application_logs_issues_insert_with_four_params():
     with patch.object(db_utils, "_get_pool", return_value=fake_pool):
         db_utils.insert_application_logs(
             "session-123",
-            "what is rag_naive?",
+            "what is rag_multimodal?",
             "it is a rag app",
             "gemini-embedding-001",
         )
@@ -62,7 +62,7 @@ def test_insert_application_logs_issues_insert_with_four_params():
     assert "%s" in sql
     assert params == (
         "session-123",
-        "what is rag_naive?",
+        "what is rag_multimodal?",
         "it is a rag app",
         "gemini-embedding-001",
     )
@@ -90,8 +90,9 @@ def test_get_chat_history_maps_rows_to_alternating_human_ai_dicts_in_order():
     assert "SELECT" in sql
     assert "application_logs" in sql
     assert "WHERE session_id = %s" in sql
-    assert "ORDER BY created_at" in sql
-    assert params == ("session-123",)
+    assert "LIMIT %s" in sql
+    assert "ORDER BY id ASC" in sql
+    assert params == ("session-123", 20)
 
 
 def test_get_chat_history_empty_when_no_rows():

@@ -17,7 +17,7 @@ help:
 	@echo "load-samples load the bundled sample documents into the corpus"
 	@echo "test       run unit tests"
 	@echo "test-int   run integration tests (needs db-up)"
-	@echo "lint       run ruff"
+	@echo "lint       run black, flake8, isort checks"
 	@echo "format     run black and isort"
 	@echo "audit      run pip-audit on requirements.txt"
 
@@ -55,10 +55,10 @@ test-int:
 	. .venv/bin/activate && pytest tests/integration -q
 
 lint:
-	. .venv/bin/activate && ruff check src
+	. .venv/bin/activate && black --check src frontend tests && flake8 src frontend tests && isort --check-only src frontend tests
 
 format:
-	. .venv/bin/activate && black src tests && isort src tests
+	. .venv/bin/activate && black src frontend tests && isort src frontend tests
 
 audit:
 	. .venv/bin/activate && pip-audit -r requirements.txt

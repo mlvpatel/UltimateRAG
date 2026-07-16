@@ -17,7 +17,7 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from src.core.config import settings
-from src.core.langchain_utils import _make_llm
+from src.core.langchain_utils import _make_llm, _reformulate_query, _to_lc_messages
 from src.embeddings.vectorstore_utils import load_document_text
 from src.multimodal import store, vision
 
@@ -45,10 +45,20 @@ def _data_uri(path: str) -> str:
 
 
 def run_multimodal(model: str, question: str, chat_history=None) -> dict:
-    """Answer a question from retrieved text and image content."""
-    steps: List[Dict[str, Any]] = []
+    """Answer a question from retrieved text and image content.
 
-    items = store.search(question, k=settings.top_k)
+    With history present the question is first rewritten to be standalone, so a
+    follow-up pronoun resolves before it reaches the vector search.
+    """
+    steps: List[Dict[str, Any]] = []
+    llm = _make_llm(model, temperature=0)
+
+    history = _to_lc_messages(chat_history)
+    query = _reformulate_query(llm, question, history)
+    if query != question:
+        steps.append({"step": "reformulate", "standalone_question": query})
+
+    items = store.search(query, k=settings.top_k)
     text_items = [d for d in items if d.metadata.get("modality") == "text"]
     image_items = [d for d in items if d.metadata.get("modality") == "image"]
     steps.append(
@@ -60,11 +70,10 @@ def run_multimodal(model: str, question: str, chat_history=None) -> dict:
         parts.append(f"[Image: {doc.metadata.get('filename')}] {doc.page_content}")
     context = "\n\n".join(parts) or "None."
 
-    llm = _make_llm(model, temperature=0)
     answer = llm.invoke(
         [
             SystemMessage(content=_QA_SYSTEM.format(context=context)),
-            HumanMessage(content=question),
+            HumanMessage(content=query),
         ]
     ).content
     steps.append({"step": "grounded_answer"})

@@ -15,7 +15,18 @@ def display_sidebar() -> None:
         st.subheader("Documents")
         uploaded = st.file_uploader(
             "Upload a document or image",
-            type=["pdf", "docx", "html", "txt", "md", "png", "jpg", "jpeg"],
+            type=[
+                "pdf",
+                "docx",
+                "html",
+                "txt",
+                "md",
+                "png",
+                "jpg",
+                "jpeg",
+                "gif",
+                "webp",
+            ],
         )
         if uploaded is not None and st.button("Index document"):
             result = api_utils.upload_document(uploaded.getvalue(), uploaded.name)

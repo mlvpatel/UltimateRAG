@@ -15,6 +15,7 @@ from src.core.config import settings
 logger = logging.getLogger(__name__)
 
 _query_embeddings = None
+_document_embeddings = None
 
 
 def _sqlalchemy_url() -> str:
@@ -25,8 +26,8 @@ def _sqlalchemy_url() -> str:
     return url
 
 
-def _build_embeddings():
-    """Construct the embedder used for the semantic answer cache.
+def _build_embeddings(task_type: str = "retrieval_query"):
+    """Construct an embedder for the given task type.
 
     Provider is chosen by settings.embedding_provider. Ollama (a local, no cost
     embedder such as nomic-embed-text) keeps the whole system keyless.
@@ -44,8 +45,17 @@ def _build_embeddings():
     return GoogleGenerativeAIEmbeddings(
         model=settings.embedding_model,
         google_api_key=settings.google_api_key,
-        task_type="retrieval_query",
+        task_type=task_type,
     )
+
+
+def get_document_embeddings():
+    """Index-time embedder (retrieval_document task type). Documents and their
+    queries are not paraphrases, so index and query sides use different maps."""
+    global _document_embeddings
+    if _document_embeddings is None:
+        _document_embeddings = _build_embeddings("retrieval_document")
+    return _document_embeddings
 
 
 def get_query_embeddings():
@@ -59,7 +69,7 @@ def get_query_embeddings():
 def load_document_text(file_path: str) -> str:
     """Load a document by file type and return its full text, unsplit.
 
-    Cache augmented generation preloads whole documents into context, so this
+    Whole documents are read as plain text before chunking, so this
     returns the joined text rather than retrieval sized chunks.
     """
     if file_path.endswith(".pdf"):

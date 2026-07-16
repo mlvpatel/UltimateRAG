@@ -12,6 +12,7 @@ sample data. For a fully local, no cost run:
 Text files are chunked and embedded; images are captioned by the vision model
 and stored, exactly as an upload through the UI would be.
 """
+
 import os
 import sys
 from pathlib import Path
@@ -40,7 +41,9 @@ def main() -> None:
     for path in files:
         result = process_document(str(path), path.name)
         print(f"  {path.name}: {result}")
-    print("Done. Open the UI and ask a question, see sample_data/README.md for examples.")
+    print(
+        "Done. Open the UI and ask a question, see sample_data/README.md for examples."
+    )
 
 
 if __name__ == "__main__":

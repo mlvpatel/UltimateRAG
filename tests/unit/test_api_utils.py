@@ -19,9 +19,9 @@ class _FakeResp:
         return self._payload
 
 
-def test_headers_include_api_key():
+def test_headers_carry_no_credential():
     headers = api_utils._headers()
-    assert headers["X-API-Key"] == api_utils.API_KEY
+    assert "X-API-Key" not in headers
     assert headers["Content-Type"] == "application/json"
 
 
